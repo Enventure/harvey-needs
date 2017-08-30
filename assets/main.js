@@ -125,17 +125,19 @@
 
     if(marker.supplyNeeds) {
       // infoHTML.push('<h3>Supply Needs</h3>')
-            console.info('Could not get fasdf.');
 
       infoHTML.push('<h3 class="halp-list--item-type">' + marker.supplyNeeds + '</h3>');
     }
     if(marker.supplyNeedsDetail) {
-            console.info('Could not get asdf.');
 
       infoHTML.push('<p class="halp-list--item-type">' + marker.supplyNeedsDetail + '</p>');
     }
+    if(marker.name || marker.phone) {
+
+      infoHTML.push('<p class="halp-list--item-type">' + marker.name + '- <a href="tel:' + marker.tel + '">' + marker.phone + '</a></p>');
+    }
     if(marker.phone) {
-      infoHTML.push('<p class="halp-list--item-type"><a href="tel:' + marker.tel + '">' + marker.phone + '</a></p>');
+      // infoHTML.push('<p class="halp-list--item-type"><a href="tel:' + marker.tel + '">' + marker.phone + '</a></p>');
     }
     if(marker.email) {
       infoHTML.push('<p class="halp-list--item-type"><a href="mailto:' + marker.email + '">' + marker.email + '</a></p>');
