@@ -67,7 +67,7 @@ body,
 #list li {
   transition: background-color 200ms linear;
   padding: 1em;
-  border: 1px solid rgba(155, 77, 202, 1);
+  border: 1px solid rgba(0,145,234, 1);
 
   /* These are technically the same, but use both */
   overflow-wrap: break-word;
@@ -89,11 +89,11 @@ body,
 
 #list li:hover {
   cursor: pointer;
-  background-color: rgba(155, 77, 202, 0.2);
+  background-color: rgba(0,145,234, 0.2);
 }
 
 #list li.active {
-  background-color: rgba(155, 77, 202, 0.8);
+  background-color: rgba(0,145,234, 0.8);
 }
 
 #list li.active p,
@@ -109,4 +109,11 @@ body,
 #list li.active a:not(.button):hover {
   color: blue;
   border-bottom: 1px solid blue;
+}
+
+a {
+    color: #0091ea;
+    }
+pre{
+  border-left: 0.3rem solid #0091ea;
 }

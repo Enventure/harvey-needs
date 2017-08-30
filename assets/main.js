@@ -24,7 +24,7 @@
 
   var MARKERS = new MarkersCollection([], addMarker);
 
-  var SPREADSHEET = 'https://spreadsheets.google.com/feeds/list/14GHRHQ_7cqVrj0B7HCTVE5EbfpNFMbSI9Gi8azQyn-k/od6/public/values?alt=json-in-script&callback=p';
+  var SPREADSHEET = 'https://spreadsheets.google.com/feeds/list/1ydfNo5XECkxl7vaNIHMGqrm56-JyLTx2PDUtc-LwadU/oeduks3/public/values?alt=json-in-script&callback=p';
 
   var ACTIVE_PLACE;
 
@@ -42,7 +42,7 @@
 
   function loadMap() {
     var mapOptions = {
-      key: 'AIzaSyDM0QbbXx1iFol1yxSh0UMO0rPMj4ZXlGo',
+      key: 'AIzaSyBDDHVgqF1j2slH76KvTqjX3JNbGhPv5AA',
       callbackName: 'initMap'
     };
 
@@ -50,7 +50,7 @@
   }
 
   function loadData() {
-    var url = "https://spreadsheets.google.com/feeds/list/14GHRHQ_7cqVrj0B7HCTVE5EbfpNFMbSI9Gi8azQyn-k/od6/public/values?alt=json-in-script&callback=initData";
+    var url = "https://spreadsheets.google.com/feeds/list/1ydfNo5XECkxl7vaNIHMGqrm56-JyLTx2PDUtc-LwadU/oeduks3/public/values?alt=json-in-script&callback=initData";
 
     asyncLoadScript(url);
   }
@@ -107,34 +107,41 @@
     }
   }
 
-  function makeGetDirectionsLink(marker){
-    var baseURL = 'https://www.google.com/maps/dir//';
+  // function makeGetDirectionsLink(marker){
+  //   var baseURL = 'https://www.google.com/maps/dir/';
 
-    return baseURL + marker.addressName + '/@' + marker.lat + ',' + marker.lng;
-  }
+  //   return baseURL + marker.addressName + '/@' + marker.lat + ',' + marker.lng;
+  // }
 
-  function makeAddressDisplay(marker) {
-    var address = marker.addressName.replace(marker.name + ', ', '');
-    return marker.name + '<br/>' + address;
-  }
+  // function makeAddressDisplay(marker) {
+  //   var address = marker.addressName.replace(marker.name + ', ', '');
+  //   return marker.name + '<br/>' + address;
+  // }
 
   function makeMarkerHTML(marker) {
     var transformLatLng = function(num){ return num.toFixed(4)};
 
     var infoHTML = [];
-    if(marker.volunteerNeeds) {
-      infoHTML.push('<h3>Volunteer Needs</h3>')
-      infoHTML.push('<p class="halp-list--item-type">' + marker.volunteerNeeds + '</p>');
-    }
+
     if(marker.supplyNeeds) {
-      infoHTML.push('<h3>Supply Needs</h3>')
-      infoHTML.push('<p class="halp-list--item-type">' + marker.supplyNeeds + '</p>');
+      // infoHTML.push('<h3>Supply Needs</h3>')
+            console.info('Could not get fasdf.');
+
+      infoHTML.push('<h3 class="halp-list--item-type">' + marker.supplyNeeds + '</h3>');
+    }
+    if(marker.supplyNeedsDetail) {
+            console.info('Could not get asdf.');
+
+      infoHTML.push('<p class="halp-list--item-type">' + marker.supplyNeedsDetail + '</p>');
     }
     if(marker.phone) {
       infoHTML.push('<p class="halp-list--item-type"><a href="tel:' + marker.tel + '">' + marker.phone + '</a></p>');
     }
-    infoHTML.push('<p class="halp-list--item-address">@ <a href="' + makeGetDirectionsLink(marker) + '" target="_blank"><strong>' + makeAddressDisplay(marker) + '</strong></a></p>');
-    infoHTML.push('<a class="button" href="' + makeGetDirectionsLink(marker) + '" target="_blank">Get Directions</a>');
+    if(marker.email) {
+      infoHTML.push('<p class="halp-list--item-type"><a href="mailto:' + marker.email + '">' + marker.email + '</a></p>');
+    }
+    // infoHTML.push('<p class="halp-list--item-address">@ <a href="' + makeGetDirectionsLink(marker) + '" target="_blank"><strong>' + makeAddressDisplay(marker) + '</strong></a></p>');
+    // infoHTML.push('<a class="button" href="' + makeGetDirectionsLink(marker) + '" target="_blank">Get Directions</a>');
     infoHTML.push('<p>Share link: </p><pre><code>' + window.location.origin + window.location.pathname + '/#!/' + marker.key + '</code></pre>')
     return infoHTML.join('');
   }
@@ -238,22 +245,23 @@
 
   function initData(data){
     var entries = data.feed.entry;
-    var hasNeeds = _.filter(entries, function(entry){
-      return getFromEntry('supplyneeds', entry) || getFromEntry('volunteerneeds', entry);
-    });
+              console.info(entries);
 
+    var hasNeeds = _.filter(entries, function(entry){
+      return getFromEntry('fulfilled', entry) == 'No';
+    });
     var placesWithNeeds = _.map(hasNeeds, function(entry){
       return {
         address: getFromEntry('address', entry),
         lat: parseFloat(getFromEntry('latitude', entry)),
         lng: parseFloat(getFromEntry('longitude', entry)),
-        name: getFromEntry('shelter', entry),
+        name: getFromEntry('individual', entry),
         phone: getFromEntry('phone', entry),
         tel: getFromEntry('phone', entry).replace(/\D+/g, ''),
-        addressName: getFromEntry('addressname', entry),
-        supplyNeeds: getFromEntry('supplyneeds', entry),
-        volunteerNeeds: getFromEntry('volunteerneeds', entry),
-        key: _.kebabCase(getFromEntry('shelter', entry))
+        email: getFromEntry('email', entry),
+        supplyNeeds: getFromEntry('needs', entry),
+        supplyNeedsDetail: getFromEntry('needsdetail', entry),
+        key: _.kebabCase(getFromEntry('individual', entry))
       };
     });
 
@@ -284,7 +292,7 @@
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-105623670-1', 'auto');
+  ga('create', 'UA-41228343-1', 'auto');
   ga('send', 'pageview');
 
   window.initMap = initMap;
